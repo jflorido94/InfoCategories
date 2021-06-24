@@ -24,12 +24,17 @@
 *}
 
 {* {$data|print_r} *}
+{* Comprueba primero si el usurio está en un pc o si esta habilitado poder verse desde dispositivos mobiles *}
 {if Context::getContext()->getDevice() == 1 || $data["mobile"]}
+    {* Luego recorre las categorias que hemos seleccionado en el backoffice *}
     {foreach $data["categories"] as $cat}
+        {* Si esa categoria o su categoria padre o su categoria principal es la que el usuario esta viendo muestra el mensaje en un div *}
         {if $category.id == $cat || $category.id_parent == $cat || Category::getCategoryHome($category.id) == $cat}
             <div style="container">
                 {$data["message"] nofilter}
             </div>
+            {* Termina el foreach para que no siga consumiendo recursos *}
+            {break}
         {/if}
     {/foreach}
 {/if}

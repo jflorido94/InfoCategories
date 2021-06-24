@@ -25,6 +25,8 @@
 */
 $sql = array();
 
+
+// ---- Creacion de la tabla para los textos en las categorias
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'TCNInfoCategory` (
     `id_TCNInfoCategory` int(11) NOT NULL AUTO_INCREMENT,
     `categories` varchar(255) NOT NULL,
@@ -33,6 +35,9 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'TCNInfoCategory` (
     PRIMARY KEY  (`id_TCNInfoCategory`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
+
+// ejecuta todos as querys contenidas en el array $sql
+// devuelve falso si alguna falla
 foreach ($sql as $query) {
     if (Db::getInstance()->execute($query) == false) {
         return false;

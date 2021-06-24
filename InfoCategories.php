@@ -125,7 +125,7 @@ class InfoCategories extends Module
     }
 
     /**
-     * Create the structure of your form.
+     * Crea la estructura del formulario del back office
      */
     protected function getConfigForm()
     {
@@ -133,7 +133,7 @@ class InfoCategories extends Module
             [
                 'form' =>
                 [
-                    'tinymce' => true,
+                    'tinymce' => true,  //para que el textarea tenga barra de herramientas
                     'legend' =>
                     [
                         'title' => $this->l('Settings'),
@@ -141,7 +141,7 @@ class InfoCategories extends Module
                     ],
                     'input' =>
                     [
-                        [
+                        [  // arbol de categorias en las que selecionas en las que quieres mostrar el mensaje
                             'type' => 'categories',
                             'label' => $this->l('Categories'),
                             'name' => 'TCNINFOCATEGORY_categories',
@@ -156,14 +156,14 @@ class InfoCategories extends Module
                             ]
 
                         ],
-                        [
+                        [  // textarea en el que se coloca lo que quieres mostrar
                             'type' => 'textarea',
                             'label' => $this->l('Message'),
                             'name' => 'TCNINFOCATEGORY_message',
                             'desc' => $this->l('Enter the message that you want show'),
                             'autoload_rte' => true,
                         ],
-                        [
+                        [  // switch para elegir si se muestra en moviles
                             'type' => 'switch',
                             'label' => $this->l('Show on Mobile'),
                             'name' => 'TCNINFOCATEGORY_mobile',
@@ -192,7 +192,7 @@ class InfoCategories extends Module
     }
 
     /**
-     * Set values for the inputs.
+     * Coloca los valores de la base de datos en cada campo en el back office
      */
     protected function getConfigFormValues()
     {
@@ -204,7 +204,9 @@ class InfoCategories extends Module
     }
 
     /**
-     * Save form data.
+     * Guarda la informacion cuando se clica en el boton guardar del backoffice
+     * 
+     * Creando o modificando el primer registro de esa fila.
      */
     protected function postProcess()
     {
@@ -229,6 +231,11 @@ class InfoCategories extends Module
         }
     }
 
+    /**
+     * Obtiene la primera linea de la tabla que contiene los mensajes
+     *
+     * @return void
+     */
     protected function getTextInfoData()
     {
         return $data = Db::getInstance()->getRow('SELECT * FROM `ps_TCNInfoCategory`');
@@ -255,19 +262,21 @@ class InfoCategories extends Module
     }
 
     /**
-     * 
+     * Recoge la informacion de la tabla de la base de datos y la muestra en el hook DisplayCategoryHeader
+     *
+     * @return tpl  un archivo tpl que se mostrara en ese hook
      */
     public function hookDisplayCategoryHeader()
     {
         $aux = $this->getTextInfoData();
         $data = [
-            "categories" => explode(',', $aux["categories"]),
+            "categories" => explode(',', $aux["categories"]), //convierte un string en un array con las diferentes categorias
             "message" => $aux["message"],
             "mobile"  => $aux["mobile"],
         ];
-        $this->context->smarty->assign([
+        $this->context->smarty->assign([  //asigna los datos a la plantilla, mediante el motor smarty
             'data' => $data,
         ]);
-        return $this->display(__FILE__, 'category.tpl');
+        return $this->display(__FILE__, 'category.tpl'); //se devuelve el archivo templates/hook/category.tpl
     }
 }
